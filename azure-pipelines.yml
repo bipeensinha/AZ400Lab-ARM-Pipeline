@@ -2,10 +2,11 @@ trigger:
 - main  # Runs on push to main branch
 
 pool:
-  name: 'demopool'
+  vmImage: 'ubuntu-latest'
+
 
 variables:
-  resourceGroup: 'bipeenRG'  # Use your existing resource group
+  resourceGroup: 'AZDemoRG'  # Use your existing resource group
   location: 'eastus'
   templateFile: 'bicep/infra.bicep'
 
@@ -21,7 +22,7 @@ stages:
     - task: AzureCLI@2
       displayName: 'Deploy Bicep Template to bipeenRG'
       inputs:
-        azureSubscription: 'myapp'  # Azure DevOps service connection
+        azureSubscription: 'azdemosvc'  # Azure DevOps service connection
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
