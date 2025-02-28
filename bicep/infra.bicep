@@ -1,3 +1,4 @@
+// check quota
 param location string = 'westeurope'
 param appServicePlanName string = 'myAppServicePlan'
 param webAppName string = 'bipeenapp8765'
