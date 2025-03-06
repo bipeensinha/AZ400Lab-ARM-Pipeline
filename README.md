@@ -1,3 +1,7 @@
+<img width="514" alt="image" src="https://github.com/user-attachments/assets/d3345c74-8602-49c5-9871-07be6d627a13" />
+
+
+
 Release Pipeline to Apply Updates
 The Release Pipeline will: ✅ Take the Bicep artifact from Build Pipeline
 ✅ Deploy infrastructure updates to bipeenRG
