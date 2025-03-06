@@ -1,0 +1,34 @@
+
+
+trigger:
+- main  # Runs on push to main branch
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+- group: App
+  
+
+stages:
+- stage: DeployInfra
+  displayName: 'Deploy Infrastructure'
+  jobs:
+  - job: DeployBicep
+    displayName: 'Deploy Bicep Template'
+    steps:
+    - checkout: self  # Checkout the repository
+
+    - task: AzureCLI@2
+      displayName: 'Deploy Bicep Template to bipeenRG'
+      inputs:
+        azureSubscription: 'azure subs'  # Azure DevOps service connection
+        scriptType: 'bash'  # Consider switching to 'pscore' for Windows
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az deployment group create --resource-group $(resourceGroup) --template-file "$(Build.SourcesDirectory)\bicep\arminfra.bicep"
+
+    - task: PublishBuildArtifacts@1  # Publish Bicep template for release pipeline
+      inputs:
+        pathToPublish: '$(Build.SourcesDirectory)\bicep\arminfra.bicep'
+        artifactName: 'bicep-artifact'
