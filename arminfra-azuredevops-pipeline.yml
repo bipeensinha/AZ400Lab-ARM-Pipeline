@@ -1,0 +1,34 @@
+trigger:
+- main  # Runs on push to main branch
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+
+variables:
+  resourceGroup: 'AZ400-RG1'  # Use your existing resource group
+  location: 'westus2'
+  templateFile: 'bicep/arminfra.bicep'
+
+stages:
+- stage: DeployInfra
+  displayName: 'Deploy Infrastructure'
+  jobs:
+  - job: DeployBicep
+    displayName: 'Deploy Bicep Template'
+    steps:
+    - checkout: self  # Checkout the repository
+
+    - task: AzureCLI@2
+      displayName: 'Deploy Bicep Template to bipeenRG'
+      inputs:
+        azureSubscription: 'azure subs'  # Azure DevOps service connection
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az deployment group create --resource-group ${{ variables.resourceGroup }} --template-file ${{ variables.templateFile }}
+
+    - task: PublishBuildArtifacts@1  # Publish Bicep template for release pipeline
+      inputs:
+        pathToPublish: '$(Build.SourcesDirectory)/bicep/infra.bicep'
+        artifactName: 'bicep-artifact'
